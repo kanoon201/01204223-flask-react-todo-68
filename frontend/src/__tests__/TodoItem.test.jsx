@@ -11,12 +11,18 @@ const baseTodo = {             // ** TodoItem พื้นฐานสำหร�
 };
 
 
-describe('TodoItem', () => {
-  it('renders with no comments correctly', () => {
-    // เดี๋ยวจะเพิ่มโค้ดตรงนี้
+  it('renders with comments correctly', () => {
+    const todoWithComment = {
+      ...baseTodo,
+      comments: [
+        {id: 1, message: 'First comment'},
+        {id: 2, message: 'Another comment'},
+      ]
+    };
     render(
-      <TodoItem todo={baseTodo} />
+      <TodoItem todo={todoWithComment} />
     );
     expect(screen.getByText('Sample Todo')).toBeInTheDocument();
+    expect(screen.getByText('First comment')).toBeInTheDocument();
+    expect(screen.getByText('Another comment')).toBeInTheDocument();
   });
-});
