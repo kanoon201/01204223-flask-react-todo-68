@@ -48,7 +48,7 @@ describe('TodoItem', () => {
     expect(screen.getByText('Sample Todo')).toBeInTheDocument();
     //
     // *** TODO: ให้เพิ่ม assertion ว่ามีข้อความ First comment และ Another comment บนหน้าจอ
-    expect(screen.getByText('Fir comment')).toBeInTheDocument();
+    expect(screen.getByText('First comment')).toBeInTheDocument();
     expect(screen.getByText('Another comment')).toBeInTheDocument();
     expect(screen.getByText(/2/)).toBeInTheDocument();
   });
