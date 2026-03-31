@@ -2,16 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
 import App from '../App.jsx'
 
-// Mock AuthContext ให้เหมือนกับว่า login แล้ว
-vi.mock('./context/AuthContext.jsx', () => ({
-  AuthProvider: ({ children }) => children,
-  useAuth: () => ({
-    username: 'testuser',
-    accessToken: 'fake-token',
-    logout: vi.fn(),
-  }),
-}));
-
 const mockResponse = (body, ok = true) =>
   Promise.resolve({
     ok,
@@ -51,21 +41,28 @@ describe('App', () => {
     expect(await screen.findByText('First comment')).toBeInTheDocument();
     expect(await screen.findByText('Second comment')).toBeInTheDocument();
   });
-
   it('toggles done on a todo item', async() => {
+    // เตรียมค่าสำหรับคืนหลังกด toggle done แล้ว
     const toggledTodoItem1 = { ...todoItem1, done: true };
 
+    // mock fetch --- สังเกตว่าจะมีการเรียก fetch สองครั้ง จากการ init และจากการกดปุ่ม 
+    //   สำหรับการเรียกแต่ละครั้งเราจะสามารถโปรแกรมคำตอบแยกกันได้ โดยเรียก mockImplementationOnce หลายครั้ง
+    //   กล่าวคือ รอบแรกคืนรายการทั้งหมด  รอบที่สองคืนค่า todo item ที่แก้ค่าแล้ว
     global.fetch
       .mockImplementationOnce(() => mockResponse(originalTodoList))    
       .mockImplementationOnce(() => mockResponse(toggledTodoItem1));
 
     render(<App />);
 
+    // assert ก่อนว่าของเดิม todo item แรกไม่ได้มีคลาส done
     expect(await screen.findByText('First todo')).not.toHaveClass('done');
 
+    // หาปุ่ม จะเจอ 2 ปุ่ม (เพราะว่ามี 2 todo item)
     const toggleButtons = await screen.findAllByRole('button', { name: /toggle/i })
+    // เลือกกดปุ่มแรก
     toggleButtons[0].click();
 
+    // ตรวจสอบว่า todo item นั้นเปลี่ยนคลาสเป็น done แล้ว
     expect(await screen.findByText('First todo')).toHaveClass('done');
     expect(global.fetch).toHaveBeenLastCalledWith(expect.stringMatching(/1\/toggle/), { method: 'PATCH' });
   });
