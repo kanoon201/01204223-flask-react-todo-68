@@ -11,6 +11,25 @@ function App() {
   const TODOLIST_LOGIN_URL = 'http://localhost:5000/api/login/';
 
 
+  async function addNewComment(todoId) {
+    try {
+      const url = `${TODOLIST_API_URL}${todoId}/comments/`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 'message': newComments[todoId] || "" }),
+      });
+      if (response.ok) {
+        setNewComments({ ...newComments, [todoId]: "" });
+        await fetchTodoList();
+      }
+    } catch (error) {
+      console.error("Error adding new comment:", error);
+    }
+  }
+
   return (
     <AuthProvider>
       <BrowserRouter>

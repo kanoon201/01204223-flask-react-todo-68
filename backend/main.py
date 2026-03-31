@@ -28,14 +28,24 @@ db.init_app(app)
 migrate = Migrate(app, db)    
 
 
-todo_list = [
-    { "id": 1,
-      "title": 'Learn Flask',
-      "done": True },
-    { "id": 2,
-      "title": 'Build a Flask App',
-      "done": False },
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todos.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://todotest:helloworld@localhost/todotest'
+
+db.init_app(app)
+migrate = Migrate(app, db)
+
+"""
+INITIAL_TODOS = [
+    TodoItem(title='Learn Flask'),
+    TodoItem(title='Build a Flask App'),
 ]
+
+with app.app_context():
+    if TodoItem.query.count() == 0:
+        for item in INITIAL_TODOS:
+            db.session.add(item)
+        db.session.commit()
+"""
 
 @app.route('/api/todos/', methods=['GET'])
 @jwt_required()
