@@ -18,9 +18,6 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-#with app.app_context():
-#    db.create_all()
-
 
 todo_list = [
     { "id": 1,
@@ -51,7 +48,7 @@ def add_todo():
         return jsonify(todo.to_dict())             
     else:
         # return http response code 400 for bad requests
-        return (jsonify({'error': 'Invalid todo data'}), 400)  
+        return (jsonify({'error': 'Invalid todo data'}), 400)
     
 
 @app.route('/api/todos/<int:id>/toggle/', methods=['PATCH'])

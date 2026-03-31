@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { useAuth } from './context/AuthContext.jsx';
-import './App.css'
+import PrivateRoute from "./PrivateRoute.jsx";
 
 import TodoItem from './TodoItem.jsx'
 
 function TodoList({apiUrl}) {
     const TODOLIST_API_URL = apiUrl;
-
+    const { username, accessToken, logout } = useAuth();
     const [todoList, setTodoList] = useState([]);
     const [newTitle, setNewTitle] = useState("");
     const [newComments, setNewComments] = useState({});
 
   useEffect(() => {
     fetchTodoList();
-  }, []);
+  }, [username]);
 
   async function fetchTodoList() {
     try {
@@ -30,6 +30,7 @@ function TodoList({apiUrl}) {
       setTodoList(data);
     } catch (err) {
       //alert("Failed to fetch todo list from backend. Make sure the backend is running.");
+      setTodoList([]);
     }
   }
 
@@ -116,8 +117,11 @@ function TodoList({apiUrl}) {
       <button onClick={() => {addNewTodo()}}>Add</button>
       <a href="/about">About</a>
       <a href="/login">Login</a>
+      {username && (
+        <a href="#" onClick={(e) => {e.preventDefault(); logout();}}>Logout</a> 
+      )}
     </>
   )
 }
 
-export default TodoList;
+export default TodoList; 

@@ -1,8 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { expect } from 'vitest'
 import TodoItem from '../TodoItem.jsx'
-
+import userEvent from '@testing-library/user-event'
 
 const baseTodo = {             // ** TodoItem พื้นฐานสำหรับทดสอบ
   id: 1,
@@ -11,9 +10,10 @@ const baseTodo = {             // ** TodoItem พื้นฐานสำหร�
   comments: [],
 };
 
+
 describe('TodoItem', () => {
-  it('renders with no comments correctly', () => {
-    // เดี๋ยวจะเพิ่มโค้ดตรงนี้
+  it('renders with no comments correctly', () => {    
+    // *** โค้ดสำหรับเทสที่เพิ่มเข้ามา
     render(
       <TodoItem todo={baseTodo} />
     );
@@ -46,8 +46,6 @@ describe('TodoItem', () => {
       <TodoItem todo={todoWithComment} />
     );
     expect(screen.getByText('Sample Todo')).toBeInTheDocument();
-    //
-    // *** TODO: ให้เพิ่ม assertion ว่ามีข้อความ First comment และ Another comment บนหน้าจอ
     expect(screen.getByText('First comment')).toBeInTheDocument();
     expect(screen.getByText('Another comment')).toBeInTheDocument();
     expect(screen.getByText(/2/)).toBeInTheDocument();
@@ -64,25 +62,28 @@ describe('TodoItem', () => {
     button.click();
     expect(onToggleDone).toHaveBeenCalledWith(baseTodo.id);
   });
-
   it('makes callback to deleteTodo when delete button is clicked', () => {
     const onDeleteTodo = vi.fn();
+
     render(
-      <TodoItem 
-       todo={baseTodo} 
-       deleteTodo={onDeleteTodo} />
+      <TodoItem
+        todo={baseTodo}
+        deleteTodo={onDeleteTodo}
+      />
     );
-    const button = screen.getByRole('button', { name: /❌/i });
-    button.click();
+  
+    const deleteButton = screen.getByRole('button', { name: /❌/i });
+    deleteButton.click();
+  
     expect(onDeleteTodo).toHaveBeenCalledWith(baseTodo.id);
   });
-
   it('makes callback to addNewComment when a new comment is added', async () => {
     const onAddNewComment = vi.fn();
     render(
-      <TodoItem 
-       todo={baseTodo} 
-       addNewComment={onAddNewComment} />
+      <TodoItem
+      todo={baseTodo}
+      addNewComment={onAddNewComment}
+    />
     );
 
     // พิมพ์ข้อความลงใน textbox
@@ -96,5 +97,4 @@ describe('TodoItem', () => {
     // assert
     expect(onAddNewComment).toHaveBeenCalledWith(baseTodo.id, 'New comment');
   });
-
 });

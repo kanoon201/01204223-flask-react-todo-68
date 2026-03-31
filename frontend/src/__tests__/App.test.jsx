@@ -1,10 +1,5 @@
-
-import { vi } from 'vitest'
-vi.mock('/vite.svg', () => ({
-  default: 'vite-logo',
-}));
-
 import { render, screen } from '@testing-library/react'
+import { vi } from 'vitest'
 import App from '../App.jsx'
 
 const mockResponse = (body, ok = true) =>
@@ -24,7 +19,6 @@ const originalTodoList = [
   todoItem2,
 ]
 
-
 describe('App', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', vi.fn());
@@ -36,7 +30,6 @@ describe('App', () => {
   });
 
   it('renders correctly', async () => {
-    // *** ให้คืน mockResponse(originalTodoList) เลย ลบของเก่าออก
     global.fetch.mockImplementationOnce(() =>
       mockResponse(originalTodoList)
     );
@@ -48,7 +41,6 @@ describe('App', () => {
     expect(await screen.findByText('First comment')).toBeInTheDocument();
     expect(await screen.findByText('Second comment')).toBeInTheDocument();
   });
-
   it('toggles done on a todo item', async() => {
     // เตรียมค่าสำหรับคืนหลังกด toggle done แล้ว
     const toggledTodoItem1 = { ...todoItem1, done: true };
