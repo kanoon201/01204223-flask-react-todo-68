@@ -7,7 +7,6 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import pytest
 
-
 from main import app as flask_app
 from models import db
 
